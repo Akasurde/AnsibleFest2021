@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Gather information about All VMware instances
+      vmware.vmware_rest.vcenter_vm_info:
+      register: existing_vms
+
+    - name: Create a configuration item
+      servicenow.itsm.configuration_item:
+        name: "{{ item.name }}"
+        other:
+          cpus: "{{ item.cpu_count | default('') }}"
+          memory: "{{ item.memory_size_MiB | default('') }}"
+          ip_address: "192.168.10.{{ idx + 20 }}"
+        sys_class_name: cmdb_ci_vmware_instance
+      loop: "{{ existing_vms.value }}"
+      loop_control:
+        index_var: idx

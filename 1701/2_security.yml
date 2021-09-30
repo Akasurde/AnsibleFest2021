@@ -1,0 +1,26 @@
+---
+- name: Protect ESXi host from ransomware
+  hosts: poweredOn
+  gather_facts: no
+  tasks:
+    - name: Gather information about execinstalledonly
+      shell: esxcli --formatter=csv system settings kernel list -o execinstalledonly
+      register: r
+      changed_when: false
+
+    - name: Save value of the current configuration of execinstalledonly
+      set_fact:
+        current_value: "{{ (r.stdout_lines[1].split(','))[0] }}"
+
+    - name: Print execinstalledonly information
+      debug:
+        msg: "Current Kernel setting for 'execinstalledonly' is {{ current_value }}"
+
+    - name: Change execinstalledonly setting to TRUE
+      shell: esxcli system settings kernel set -s execinstalledonly -v TRUE
+      when: current_value != 'FALSE'
+      register: r
+
+    - name: Print output
+      debug:
+        msg: "{{ r.stdout_lines }}"

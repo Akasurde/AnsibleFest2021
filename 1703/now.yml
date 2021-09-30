@@ -1,0 +1,8 @@
+plugin: servicenow.itsm.now
+table: cmdb_ci_vmware_instance
+columns:
+    - name
+    - ip_address
+compose:
+    ansible_user: "'root'"
+    ansible_host: ip_address

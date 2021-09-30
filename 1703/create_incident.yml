@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create incident
+      servicenow.itsm.incident:
+        state: new
+        short_description: Create A WebServer VM
+        description: A developer wants a temporary webserver VM in ESXi 10.65.201.106
+        impact: medium
+        urgency: low
+
+        other:
+          expected_start: 2021-08-20

@@ -1,0 +1,13 @@
+---
+- name: Running esxcli command on the given ESXi
+  hosts: poweredOn
+  tasks:
+    - name: Get System information
+      shell: esxcli system version get
+      register: r
+      changed_when: False
+
+    - name: Print output for debugging
+      debug:
+        msg: "{{ r.stdout_lines }}"
+
